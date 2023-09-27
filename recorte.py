@@ -1,7 +1,23 @@
 import cv2
+import sys
+import os
 
-# Nombre del archivo de imagen
-nombre_archivo = 'foto.jpeg'
+# Verifica si se proporciona el nombre del archivo de imagen como argumento
+if len(sys.argv) != 2:
+    print("Uso: python3 recorte.py nombre_de_la_foto.jpeg")
+    sys.exit(1)
+
+# Obtiene el nombre del archivo de imagen desde los argumentos de línea de comandos
+nombre_archivo = sys.argv[1]
+
+# Verifica si el archivo de imagen especificado existe
+if not os.path.isfile(nombre_archivo):
+    print(f"El archivo '{nombre_archivo}' no existe.")
+    sys.exit(1)
+
+# Crea una carpeta llamada "recorte" si no existe
+carpeta_recorte = 'recorte'
+os.makedirs(carpeta_recorte, exist_ok=True)
 
 # Carga la imagen
 imagen = cv2.imread(nombre_archivo)
