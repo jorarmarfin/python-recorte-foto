@@ -23,13 +23,14 @@ os.makedirs(carpeta_recorte, exist_ok=True)
 imagen = cv2.imread(nombre_archivo)
 
 # Carga el clasificador de detección de rostros preentrenado
-clasificador_rostros = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+clasificador_rostros = cv2.CascadeClassifier('/var/www/html/opencv/data/haarcascades/haarcascade_frontalface_alt.xml')
 
 # Convierte la imagen a escala de grises (la detección de rostros funciona mejor en imágenes en escala de grises)
 imagen_gris = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
 
 # Detecta rostros en la imagen
-rostros = clasificador_rostros.detectMultiScale(imagen_gris, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+#rostros = clasificador_rostros.detectMultiScale(imagen_gris, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+rostros = clasificador_rostros.detectMultiScale(imagen_gris, 1.3,5)
 
 # Si se detectan rostros, recorta la región del primer rostro encontrado
 if len(rostros) > 0:
@@ -44,11 +45,17 @@ if len(rostros) > 0:
     alto_recorte = int(ancho_recorte * proporcion_alto / proporcion_ancho)
 
     # Realiza el recorte
-    rostro_recortado = imagen[y - 150:y + alto_recorte, x:x + ancho_recorte+50]
+    rostro_recortado = imagen[y - 150:y + alto_recorte, x-80:x + ancho_recorte+100]
 
-    # Guarda la región del rostro recortado en un archivo
-    cv2.imwrite('rostro_recortado.jpeg', rostro_recortado)
+    # Obtén la extensión del archivo original
+    nombre_base, extension = os.path.splitext(os.path.basename(nombre_archivo))
 
-    print("Rostro recortado y guardado como 'rostro_recortado.jpeg'.")
+    # Guarda la región del rostro recortado en un archivo en la carpeta "recorte"
+    nombre_recorte = os.path.join(carpeta_recorte, f"{nombre_base}{extension}")
+    # Intenta guardar la región del rostro recortado en un archivo
+    if cv2.imwrite(nombre_recorte, rostro_recortado):
+        print(f"Rostro recortado y guardado en {nombre_recorte}.")
+    else:
+        print("Error al guardar la imagen recortada.")
 else:
-    print("No se detectaron rostros en la imagen.")
+    print(f"No se detectaron rostros en la imagen. {nombre_archivo}")

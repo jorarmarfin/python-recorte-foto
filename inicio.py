@@ -23,7 +23,7 @@ while(True):
         y_fin = y+h+80
         cv2.rectangle(img,(x_ini,y_ini),(x_fin,y_fin),(0,0,0),2)
     #Recortar una imagen
-    imageOut = img[x_ini-150:x_fin+100,y_ini+100:y_fin+50]
+    imageOut = img[x_ini:x_fin,y_ini:y_fin]
     #Mostramos la imagen
     cv2.imshow('imagen original',img)
     cv2.imshow('imagen cortada',imageOut)
