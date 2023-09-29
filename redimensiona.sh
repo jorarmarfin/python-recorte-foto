@@ -15,7 +15,7 @@ for f in *.jpg *.jpeg *.png; do
   width=$(identify -format "%w" "$f")
   if [ $width -lt 1000 ]; then
     echo "Redimensionando $f a 1024 píxeles"
-    convert "$f" -resize 1024x "$f"
+    convert "$f" -resize 2048x "$f"
   fi
 done
 
